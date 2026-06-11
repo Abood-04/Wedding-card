@@ -36,21 +36,33 @@
             perspective: 1000px;
         }
 
-        /* حاوية شاشة الهاتف */
+  /* حاوية شاشة الهاتف - تم تعديلها لتصبح كامل الشاشة على الجوال */
         .phone-container {
             width: 100%;
             max-width: 420px;
-            height: 92vh;
+            height: 100vh; /* تغيرت من 92vh إلى 100vh لملء الشاشة بالطول */
             background-color: var(--bg-rose);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.25);
-            border-radius: 40px;
-            overflow-y: hidden;
             position: relative;
             scroll-behavior: smooth;
-            border: 8px solid #ffffff;
+            overflow-y: hidden;
             z-index: 10;
+            
+            /* هذه الخصائص تم إلغاؤها على الشاشات الصغيرة لتملأ الشاشة تماماً */
+            box-shadow: 0 30px 60px rgba(0,0,0,0.25);
+            border: 8px solid #ffffff;
+            border-radius: 40px;
         }
 
+        /* ميديا كويري ذكية: إذا انفتحت الدعوة على تلفون حقيقي، تشيل الحواف وتفرش كامل الشاشة */
+        @media (max-width: 480px) {
+            .phone-container {
+                max-width: 100%;
+                height: 100vh;
+                border: none;
+                border-radius: 0;
+                box-shadow: none;
+            }
+        }
         /* ====== نظام شاشة فيديو الظرف ====== */
         .envelope-video-screen {
             position: absolute;
