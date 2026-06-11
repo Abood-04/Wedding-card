@@ -33,7 +33,8 @@
             align-items: center;
             min-height: 100vh;
             min-height: -webkit-fill-available;
-            overflow: hidden;
+            /* تم تعديل الـ overflow هنا لكي يسمح بال سكرول على الـ PC بشكل طبيعي */
+            overflow-y: auto;
             perspective: 1000px;
         }
 
@@ -45,7 +46,8 @@
             background-color: var(--bg-rose);
             box-shadow: none;
             border-radius: 0px;
-            overflow-y: hidden;
+            /* تم تحويل الـ overflow إلى auto لضمان عمل التمرير على الكروم والـ PC دون مشاكل */
+            overflow-y: auto;
             position: relative;
             scroll-behavior: smooth;
             border: none;
@@ -269,7 +271,7 @@
             <i class="fa-solid fa-music"></i>
         </div>
 
-        <audio id="weddingAudio" loop prelaod="auto">
+        <audio id="weddingAudio" loop preload="auto">
             <source src="bg-mp3.mp3" type="audio/mpeg">
             متصفحك لا يدعم تشغيل الصوت.
         </audio>
@@ -393,35 +395,30 @@
         window.addEventListener('DOMContentLoaded', () => {
             createGlobalPetals();
             
-            // انتهاء فيديو فتح الظرف لتفجير باقي المحتوى
             const envVideo = document.getElementById('envelopeVideo');
             envVideo.onended = function() {
                 revealInvitationContent();
             };
         });
 
-        // دالة تشغيل فيديو الظرف وتشغيل الموسيقى الخلفية فور النقر
         function startEnvelopeVideo() {
             const envVideo = document.getElementById('envelopeVideo');
             const sealBtn = document.querySelector('.invisible-seal-btn');
             const audioTrack = document.getElementById('weddingAudio');
             const musicBtn = document.getElementById('musicControlBtn');
             
-            // إخفاء الختم الوهمي لمنع التكرار
             if(sealBtn) sealBtn.style.display = 'none';
             
-            // تشغيل الموسيقى فوراً
             if(audioTrack) {
                 audioTrack.play().then(() => {
                     if(musicBtn) {
-                        musicBtn.classList.add('show', 'playing'); // إظهار الزر وبدء أنيميشن الدوران
+                        musicBtn.classList.add('show', 'playing'); 
                     }
                 }).catch(error => {
                     console.log("المتصفح يطلب تفاعلاً إضافياً للصوت:", error);
                 });
             }
             
-            // تشغيل فيديو الظرف
             if(envVideo) {
                 envVideo.play().catch(error => {
                     console.log("خطأ في تشغيل فيديو الظرف:", error);
@@ -430,7 +427,6 @@
             }
         }
 
-        // دالة كتم وتشغيل الموسيقى يدوياً من الزر العائم
         function toggleMusic() {
             const audioTrack = document.getElementById('weddingAudio');
             const musicBtn = document.getElementById('musicControlBtn');
@@ -447,7 +443,6 @@
             }
         }
 
-        // إخفاء شاشة الفيديو والانتقال إلى الصفحة الرئيسية للدعوة
         function revealInvitationContent() {
             const videoScreen = document.getElementById('envelopeVideoScreen');
             videoScreen.classList.add('fade-out');
@@ -463,7 +458,6 @@
                 mainVideo.play().catch(error => console.log("تحذير تشغيل فيديو الخلفية الداخلي:", error));
             }
 
-            // ضمان ظهور زر الموسيقى إن لم يكن قد ظهر بعد
             const musicBtn = document.getElementById('musicControlBtn');
             if(musicBtn) musicBtn.classList.add('show');
 
@@ -471,7 +465,6 @@
             internalContainer.addEventListener('scroll', triggerScrollReveal);
         }
 
-        // نظام أنيميشن التمرير (Scroll Reveal)
         function triggerScrollReveal() {
             const reveals = document.querySelectorAll('.scroll-reveal');
             const container = document.getElementById('phoneContainer');
@@ -485,7 +478,6 @@
             });
         }
 
-        // العداد التنازلي الموجه لتاريخ 20 يونيو 2026
         const weddingTargetTime = new Date("June 20, 2026 20:30:00").getTime();
 
         setInterval(function() {
@@ -503,7 +495,6 @@
             document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
         }, 1000);
 
-        // توليد بتلات الورد المتطايرة ديناميكياً
         function createGlobalPetals() {
             const container = document.getElementById('globalPetals');
             const petalCount = 35; 
