@@ -287,7 +287,7 @@
 
         <div class="envelope-video-screen" id="envelopeVideoScreen">
             <div class="invisible-seal-btn" onclick="startEnvelopeVideo()"></div>
-            <video id="envelopeVideo" playsinline muted autoplay preload="auto" webkit-playsinline>
+            <video id="envelopeVideo" playsinline muted preload="auto" webkit-playsinline>
                 <source src="card1.mp4" type="video/mp4">
                 متصفحك لا يدعم تشغيل الفيديو.
             </video>
@@ -410,7 +410,7 @@
             };
         });
 
-        // دالة تشغيل فيديو الظرف وتشغيل الموسيقى الخلفية فور النقر
+        // تشغيل فيديو الظرف وتشغيل الموسيقى الخلفية فور النقر على الختم
         function startEnvelopeVideo() {
             const envVideo = document.getElementById('envelopeVideo');
             const sealBtn = document.querySelector('.invisible-seal-btn');
@@ -419,7 +419,7 @@
             
             if(sealBtn) sealBtn.style.display = 'none';
             
-            // تشغيل الموسيقى فوراً عند تفاعل المستخدم
+            // تشغيل الموسيقى فوراً مع ضغطة الختم
             if(audioTrack) {
                 audioTrack.play().then(() => {
                     if(musicBtn) {
@@ -430,6 +430,7 @@
                 });
             }
             
+            // إعطاء أمر تشغيل صريح لفيديو الظرف عند النقرة لمنع الـ Autoplay المبكر
             if(envVideo) {
                 envVideo.play().catch(error => {
                     console.log("خطأ في تشغيل فيديو الظرف:", error);
