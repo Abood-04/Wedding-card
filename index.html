@@ -36,11 +36,11 @@
             perspective: 1000px;
         }
 
-  /* حاوية شاشة الهاتف - تم تعديلها لتصبح كامل الشاشة على الجوال */
+        /* حاوية شاشة الهاتف - تم تعديلها لتصبح كامل الشاشة على الجوال */
         .phone-container {
             width: 100%;
             max-width: 420px;
-            height: 100vh; /* تغيرت من 92vh إلى 100vh لملء الشاشة بالطول */
+            height: 100vh;
             background-color: var(--bg-rose);
             position: relative;
             scroll-behavior: smooth;
@@ -63,6 +63,7 @@
                 box-shadow: none;
             }
         }
+
         /* ====== نظام شاشة فيديو الظرف ====== */
         .envelope-video-screen {
             position: absolute;
@@ -106,7 +107,7 @@
             pointer-events: none;
         }
 
-        /* ====== زر التحكم بالموسيقى العائم الجديد ====== */
+        /* ====== زر التحكم بالموسيقى العائم ====== */
         .music-control-btn {
             position: absolute;
             bottom: 25px;
@@ -116,7 +117,7 @@
             background-color: rgba(255, 255, 255, 0.9);
             border: 1px solid var(--accent-pink);
             border-radius: 50%;
-            display: none; /* يتم تفعيله وإظهاره بالجافا سكريبت بعد فتح الظرف */
+            display: none; 
             justify-content: center;
             align-items: center;
             color: #7c5357;
@@ -279,14 +280,14 @@
             <i class="fa-solid fa-music"></i>
         </div>
 
-        <audio id="weddingAudio" loop prelaod="auto">
+        <audio id="weddingAudio" loop preload="auto">
             <source src="bg-mp3.mp3" type="audio/mpeg">
             متصفحك لا يدعم تشغيل الصوت.
         </audio>
 
         <div class="envelope-video-screen" id="envelopeVideoScreen">
             <div class="invisible-seal-btn" onclick="startEnvelopeVideo()"></div>
-            <video id="envelopeVideo" playsinline muted>
+            <video id="envelopeVideo" playsinline muted autoplay preload="auto" webkit-playsinline>
                 <source src="card1.mp4" type="video/mp4">
                 متصفحك لا يدعم تشغيل الفيديو.
             </video>
@@ -295,7 +296,7 @@
         <div class="invitation-body" id="invitationBody">
             
             <div class="video-hero-section">
-                <video autoplay muted loop playsinline id="invitationVideo">
+                <video autoplay muted loop playsinline preload="auto" webkit-playsinline id="invitationVideo">
                     <source src="The first.mp4" type="video/mp4">
                     متصفحك لا يدعم تشغيل الفيديو.
                 </video>
@@ -403,7 +404,6 @@
         window.addEventListener('DOMContentLoaded', () => {
             createGlobalPetals();
             
-            // انتهاء فيديو فتح الظرف لتفجير باقي المحتوى
             const envVideo = document.getElementById('envelopeVideo');
             envVideo.onended = function() {
                 revealInvitationContent();
@@ -417,21 +417,19 @@
             const audioTrack = document.getElementById('weddingAudio');
             const musicBtn = document.getElementById('musicControlBtn');
             
-            // إخفاء الختم الوهمي لمنع التكرار
             if(sealBtn) sealBtn.style.display = 'none';
             
-            // تشغيل الموسيقى فوراً
+            // تشغيل الموسيقى فوراً عند تفاعل المستخدم
             if(audioTrack) {
                 audioTrack.play().then(() => {
                     if(musicBtn) {
-                        musicBtn.classList.add('show', 'playing'); // إظهار الزر وبدء أنيميشن الدوران
+                        musicBtn.classList.add('show', 'playing'); 
                     }
                 }).catch(error => {
                     console.log("المتصفح يطلب تفاعلاً إضافياً للصوت:", error);
                 });
             }
             
-            // تشغيل فيديو الظرف
             if(envVideo) {
                 envVideo.play().catch(error => {
                     console.log("خطأ في تشغيل فيديو الظرف:", error);
@@ -473,7 +471,6 @@
                 mainVideo.play().catch(error => console.log("تحذير تشغيل فيديو الخلفية الداخلي:", error));
             }
 
-            // ضمان ظهور زر الموسيقى إن لم يكن قد ظهر بعد
             const musicBtn = document.getElementById('musicControlBtn');
             if(musicBtn) musicBtn.classList.add('show');
 
