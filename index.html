@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>دعوة زفاف أحمد وسارة - Signia by Hilton</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,27 +27,28 @@
         }
 
         body {
-            background: linear-gradient(135deg, #eed9d1 0%, #e4c4ba 100%);
+            background: var(--bg-rose);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            min-height: -webkit-fill-available;
             overflow: hidden;
             perspective: 1000px;
         }
 
         /* حاوية شاشة الهاتف */
         .phone-container {
-            width: 100%;
-            max-width: 420px;
-            height: 92vh;
+            width: 100vw;
+            height: 100vh;
+            height: -webkit-fill-available;
             background-color: var(--bg-rose);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.25);
-            border-radius: 40px;
+            box-shadow: none;
+            border-radius: 0px;
             overflow-y: hidden;
             position: relative;
             scroll-behavior: smooth;
-            border: 8px solid #ffffff;
+            border: none;
             z-index: 10;
         }
 
@@ -78,8 +79,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 150px;
-            height: 150px;
+            width: 90px;
+            height: 90px;
             background: rgba(255, 255, 255, 0); 
             border-radius: 50%;
             cursor: pointer;
@@ -162,6 +163,7 @@
             display: none;
             width: 100%;
             padding: 0 0 40px;
+            padding-bottom: calc(40px + env(safe-area-inset-bottom));
         }
         .invitation-body.show { display: block; }
 
@@ -183,7 +185,7 @@
         .video-hero-section video {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;
         }
 
         /* ====== فواصل الصور المخصصة ====== */
@@ -254,35 +256,6 @@
         .btn-submit { width: 100%; background: linear-gradient(135deg, #ce7d84 0%, #b55d65 100%); color: #fff; border: none; padding: 15px; border-radius: 30px; font-size: 15px; font-weight: bold; cursor: pointer; box-shadow: 0 6px 15px rgba(181, 93, 101, 0.35); }
 
         .footer-brand { font-size: 12px; color: #bfaeae; margin-top: 35px; text-align: center; font-weight: 600; letter-spacing: 0.5px; }
-        
-        /* قسم معلومات التواصل الخاص بـ عبدالله */
-        .developer-info {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            margin-top: 10px;
-            font-size: 12px;
-            color: #a89595;
-        }
-        .developer-info a, .developer-info span {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            text-decoration: none;
-            color: #9a8b8b;
-            font-weight: 500;
-            direction: ltr;
-            transition: color 0.3s ease;
-        }
-        .developer-info a:hover {
-            color: #ce7d84;
-        }
-        .developer-info i {
-            font-size: 14px;
-            color: #ce7d84;
-        }
-
         .phone-container::-webkit-scrollbar { width: 0px; }
     </style>
 </head>
@@ -366,18 +339,18 @@
                     <div class="timeline">
                         <div class="timeline-item">
                             <i class="fa-solid fa-utensils"></i>
-                            <div class="time">9:30 م</div>
-                            <div class="event"> العشاء</div>
+                            <div class="time">10:30 م</div>
+                            <div class="event">مأدبة العشاء</div>
                         </div>
                         <div class="timeline-item">
                             <i class="fa-solid fa-wand-magic-sparkles"></i>
-                            <div class="time">8:30 م</div>
-                            <div class="event">الحفلة</div>
+                            <div class="time">10:00 م</div>
+                            <div class="event">زفة العروسين</div>
                         </div>
                         <div class="timeline-item">
                             <i class="fa-solid fa-users"></i>
-                            <div class="time">07:15 م</div>
-                            <div class="event">زفة العروس</div>
+                            <div class="time">08:30 م</div>
+                            <div class="event">استقبال الضيوف</div>
                         </div>
                     </div>
                 </div>
@@ -411,18 +384,6 @@
                 </div>
 
                 <div class="footer-brand">Created by Abdullah</div>
-                
-                <div class="developer-info">
-                    <a href="https://instagram.com/abdallah_.abusunober" target="_blank">
-                        <i class="fa-brands fa-instagram"></i> abdallah_.abusunober
-                    </a>
-                    <a href="mailto:aboodabaddi004@gmail.com">
-                        <i class="fa-solid fa-envelope"></i> aboodabaddi004@gmail.com
-                    </a>
-                    <a href="tel:0791544050">
-                        <i class="fa-solid fa-phone"></i> 0791544050
-                    </a>
-                </div>
             </div>
         </div>
 
