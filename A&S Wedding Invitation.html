@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دعوة زفاف أحمد وسارة - Signia by Hilton</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital@1&family=Cairo:wght@300;400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #d4a373;
+            --bg-rose: #fcf8f5;
+            --text-dark: #5c4d4d;
+            --accent-pink: #e8c5c8;
+            --3d-shadow: 0 15px 35px rgba(92, 77, 77, 0.12), 0 5px 15px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #eed9d1 0%, #e4c4ba 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        /* حاوية شاشة الهاتف */
+        .phone-container {
+            width: 100%;
+            max-width: 420px;
+            height: 92vh;
+            background-color: var(--bg-rose);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.25);
+            border-radius: 40px;
+            overflow-y: hidden;
+            position: relative;
+            scroll-behavior: smooth;
+            border: 8px solid #ffffff;
+            z-index: 10;
+        }
+
+        /* ====== نظام شاشة فيديو الظرف ====== */
+        .envelope-video-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        .envelope-video-screen video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* الزر الوهمي المخفي فوق الختم */
+        .invisible-seal-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90px;
+            height: 90px;
+            background: rgba(255, 255, 255, 0); 
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 105;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* عند انتهاء الفيديو واختفاء الشاشة */
+        .envelope-video-screen.fade-out {
+            opacity: 0;
+            transform: scale(1.05);
+            pointer-events: none;
+        }
+
+        /* ====== زر التحكم بالموسيقى العائم الجديد ====== */
+        .music-control-btn {
+            position: absolute;
+            bottom: 25px;
+            left: 25px;
+            width: 45px;
+            height: 45px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--accent-pink);
+            border-radius: 50%;
+            display: none; /* يتم تفعيله وإظهاره بالجافا سكريبت بعد فتح الظرف */
+            justify-content: center;
+            align-items: center;
+            color: #7c5357;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: var(--3d-shadow);
+            z-index: 99;
+            transition: all 0.3s ease;
+        }
+        
+        .music-control-btn.show {
+            display: flex;
+        }
+
+        /* حركة الدوران للزر عند تشغيل الموسيقى */
+        .music-control-btn.playing i {
+            animation: rotateMusicBtn 3.5s linear infinite;
+        }
+
+        @keyframes rotateMusicBtn {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* نظام بتلات الورد الشامل لكل الصفحات */
+        .global-petals-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 95;
+            overflow: hidden;
+        }
+
+        .petal {
+            position: absolute;
+            background: linear-gradient(135deg, #ffebec 0%, #fca3b5 70%, #e8859a 100%);
+            border-radius: 60% 10% 60% 50%;
+            opacity: 0.7;
+            pointer-events: none;
+            animation: fallAndFly linear infinite;
+        }
+
+        @keyframes fallAndFly {
+            0% { transform: translate(0, -20px) rotate(0deg) scale(0.8); opacity: 0; }
+            15% { opacity: 0.75; }
+            85% { opacity: 0.75; }
+            100% { transform: translate(120px, 95vh) rotate(540deg) scale(1.1); opacity: 0; }
+        }
+
+        /* --- محتوى الدعوة الداخلي --- */
+        .invitation-body {
+            display: none;
+            width: 100%;
+            padding: 0 0 40px;
+        }
+        .invitation-body.show { display: block; }
+
+        .main-content {
+            padding: 0 24px 40px;
+            text-align: center;
+            color: var(--text-dark);
+        }
+
+        /* ====== قسم الفيديو المتكرر الداخلي ====== */
+        .video-hero-section {
+            width: 100%;
+            aspect-ratio: 9/16;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 2px solid rgba(232, 197, 200, 0.3);
+            background-color: #000;
+        }
+        .video-hero-section video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* ====== فواصل الصور المخصصة ====== */
+        .custom-image-divider {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 35px 0;
+        }
+        .custom-image-divider img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
+        }
+
+        /* أنيميشن التمرير */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(40px) scale(0.96);
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+            margin-bottom: 20px;
+        }
+        .scroll-reveal.active { opacity: 1; transform: translateY(0) scale(1); }
+
+        /* بطاقات العداد التنازلي البارزة */
+        .countdown-title { font-size: 15px; color: #8a7a7a; margin-bottom: 18px; }
+        .countdown-container { display: flex; justify-content: center; gap: 14px; }
+        .time-box {
+            background: #ffffff; padding: 12px 8px; border-radius: 16px; width: 72px;
+            box-shadow: var(--3d-shadow); border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+        .time-box span { display: block; font-size: 24px; font-weight: 700; color: #7c5357; }
+        .time-box label { font-size: 11px; color: #9a8b8b; font-weight: 600; }
+
+        /* الأزرار والخريطة الفندقية */
+        .section-title { font-family: 'Amiri', serif; font-size: 25px; color: #7c5357; margin-bottom: 5px; }
+        .hotel-subtitle { font-size: 13px; color: #8a7a7a; margin-bottom: 3px; font-weight: 600; }
+        .hotel-address { font-size: 11px; color: #a89595; margin-bottom: 18px; direction: ltr; }
+        .action-buttons { display: flex; justify-content: center; gap: 14px; margin-bottom: 22px; }
+        
+        .btn {
+            background: #ffffff; border: 1px solid rgba(232, 197, 200, 0.6); padding: 12px 20px;
+            border-radius: 30px; font-size: 13px; color: var(--text-dark); text-decoration: none;
+            display: inline-flex; align-items: center; gap: 8px; box-shadow: var(--3d-shadow);
+            font-weight: 600; transition: all 0.3s ease;
+        }
+        .btn:hover { transform: translateY(-3px); background: var(--accent-pink); color: white; }
+
+        .map-wrapper { width: 100%; height: 210px; border-radius: 20px; overflow: hidden; box-shadow: var(--3d-shadow); border: 4px solid #ffffff; }
+        .map-wrapper iframe { width: 100%; height: 100%; border: 0; }
+
+        /* جدول برنامج الحفل */
+        .timeline { display: flex; justify-content: space-around; background: #ffffff; padding: 22px 10px; border-radius: 20px; box-shadow: var(--3d-shadow); border: 1px solid rgba(255,255,255,0.7); }
+        .timeline-item { text-align: center; }
+        .timeline-item i { font-size: 24px; color: #ce7d84; margin-bottom: 8px; }
+        .timeline-item .time { font-size: 14px; font-weight: bold; color: var(--text-dark); }
+        .timeline-item .event { font-size: 12px; color: #9a8b8b; }
+
+        /* نموذج تأكيد الحضور */
+        .rsvp-form { background: #ffffff; padding: 28px 22px; border-radius: 20px; text-align: right; box-shadow: var(--3d-shadow); border: 1px solid rgba(255,255,255,0.7); position: relative; z-index: 100; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text-dark); }
+        .form-group input[type="text"], .form-group textarea { width: 100%; padding: 14px; border: 1px solid #e2d5d5; border-radius: 12px; font-size: 13px; background-color: var(--bg-rose); outline: none; }
+        .radio-group { display: flex; gap: 20px; }
+        .radio-group label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+        .btn-submit { width: 100%; background: linear-gradient(135deg, #ce7d84 0%, #b55d65 100%); color: #fff; border: none; padding: 15px; border-radius: 30px; font-size: 15px; font-weight: bold; cursor: pointer; box-shadow: 0 6px 15px rgba(181, 93, 101, 0.35); }
+
+        .footer-brand { font-size: 12px; color: #bfaeae; margin-top: 35px; text-align: center; font-weight: 600; letter-spacing: 0.5px; }
+        .phone-container::-webkit-scrollbar { width: 0px; }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container" id="phoneContainer">
+
+        <div class="global-petals-container" id="globalPetals"></div>
+
+        <div class="music-control-btn" id="musicControlBtn" onclick="toggleMusic()">
+            <i class="fa-solid fa-music"></i>
+        </div>
+
+        <audio id="weddingAudio" loop prelaod="auto">
+            <source src="bg-mp3.mp3" type="audio/mpeg">
+            متصفحك لا يدعم تشغيل الصوت.
+        </audio>
+
+        <div class="envelope-video-screen" id="envelopeVideoScreen">
+            <div class="invisible-seal-btn" onclick="startEnvelopeVideo()"></div>
+            <video id="envelopeVideo" playsinline muted>
+                <source src="card1.mp4" type="video/mp4">
+                متصفحك لا يدعم تشغيل الفيديو.
+            </video>
+        </div>
+
+        <div class="invitation-body" id="invitationBody">
+            
+            <div class="video-hero-section">
+                <video autoplay muted loop playsinline id="invitationVideo">
+                    <source src="The first.mp4" type="video/mp4">
+                    متصفحك لا يدعم تشغيل الفيديو.
+                </video>
+            </div>
+
+            <div class="main-content">
+                
+                <div class="custom-image-divider">
+                    <img src="fllowers-removebg-preview.png" alt="فاصل ورد مخصص 1" onerror="this.src='https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=300&auto=format&fit=crop'">
+                </div>
+
+                <div class="scroll-reveal">
+                    <div class="countdown-title">الوقت المتبقي لليلتنا المنتظرة (أحمد & سارة)</div>
+                    <div class="countdown-container">
+                        <div class="time-box"><span id="seconds">00</span><label>ثانية</label></div>
+                        <div class="time-box"><span id="minutes">00</span><label>دقيقة</label></div>
+                        <div class="time-box"><span id="hours">00</span><label>ساعة</label></div>
+                        <div class="time-box"><span id="days">00</span><label>يوم</label></div>
+                    </div>
+                </div>
+
+                <div class="custom-image-divider">
+                    <img src="fllowers-removebg-preview.png" alt="فاصل ورد مخصص 2" onerror="this.src='https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=300&auto=format&fit=crop'">
+                </div>
+
+                <div class="scroll-reveal">
+                    <div class="section-title">موقع الحفل</div>
+                    <div class="hotel-subtitle">Signia by Hilton Amman</div>
+                    <div class="hotel-address">XV9X+945, Al-Qadi Ayad St., Amman</div>
+                    
+                    <div class="action-buttons">
+                        <a href="https://maps.google.com/?q=Signia+by+Hilton+Amman+Al-Qadi+Ayad+St" target="_blank" class="btn">
+                            <i class="fa-solid fa-location-dot"></i> فتح في الخرائط
+                        </a>
+                        <a href="#" class="btn" onclick="alert('تم حفظ موعد الفرح بالتقويم!')">
+                            <i class="fa-regular fa-calendar-plus"></i> حفظ الموعد
+                        </a>
+                    </div>
+                    
+                    <div class="map-wrapper">
+                        <iframe src="https://maps.google.com/maps?q=Signia%20by%20Hilton%20Amman&t=&z=15&ie=UTF8&iwloc=&output=embed" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                </div>
+
+                <div class="custom-image-divider">
+                    <img src="fllowers-removebg-preview.png" alt="فاصل ورد مخصص 3" onerror="this.src='https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=300&auto=format&fit=crop'">
+                </div>
+
+                <div class="scroll-reveal">
+                    <div class="section-title">برنامج الحفل</div>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <i class="fa-solid fa-utensils"></i>
+                            <div class="time">10:30 م</div>
+                            <div class="event">مأدبة العشاء</div>
+                        </div>
+                        <div class="timeline-item">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            <div class="time">10:00 م</div>
+                            <div class="event">زفة العروسين</div>
+                        </div>
+                        <div class="timeline-item">
+                            <i class="fa-solid fa-users"></i>
+                            <div class="time">08:30 م</div>
+                            <div class="event">استقبال الضيوف</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="custom-image-divider">
+                    <img src="fllowers-removebg-preview.png" alt="فاصل ورد مخصص 4" onerror="this.src='https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=300&auto=format&fit=crop'">
+                </div>
+
+                <div class="scroll-reveal">
+                    <div class="section-title">تأكيد الحضور</div>
+                    <form class="rsvp-form" onsubmit="event.preventDefault(); alert('تم إرسال تأكيد الحضور بنجاح ✨ ننتظركم بشوق!');">
+                        <div class="form-group">
+                            <label>الاسم الكريم:</label>
+                            <input type="text" placeholder="الرجاء إدخال اسمك الثنائي" required>
+                        </div>
+                        <div class="form-group">
+                            <label>هل ستسعدنا بحضورك؟</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="attend3d" checked> نعم، بكل سرور</label>
+                                <label><input type="radio" name="attend3d"> للأسف، لا أستطيع</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>كلمة للعروسين (اختياري):</label>
+                            <textarea rows="3" placeholder="اكتب تهنئتك الجميلة هنا..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn-submit">إرسال التأكيد</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="footer-brand">Created by Abdullah</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            createGlobalPetals();
+            
+            // انتهاء فيديو فتح الظرف لتفجير باقي المحتوى
+            const envVideo = document.getElementById('envelopeVideo');
+            envVideo.onended = function() {
+                revealInvitationContent();
+            };
+        });
+
+        // دالة تشغيل فيديو الظرف وتشغيل الموسيقى الخلفية فور النقر
+        function startEnvelopeVideo() {
+            const envVideo = document.getElementById('envelopeVideo');
+            const sealBtn = document.querySelector('.invisible-seal-btn');
+            const audioTrack = document.getElementById('weddingAudio');
+            const musicBtn = document.getElementById('musicControlBtn');
+            
+            // إخفاء الختم الوهمي لمنع التكرار
+            if(sealBtn) sealBtn.style.display = 'none';
+            
+            // تشغيل الموسيقى فوراً
+            if(audioTrack) {
+                audioTrack.play().then(() => {
+                    if(musicBtn) {
+                        musicBtn.classList.add('show', 'playing'); // إظهار الزر وبدء أنيميشن الدوران
+                    }
+                }).catch(error => {
+                    console.log("المتصفح يطلب تفاعلاً إضافياً للصوت:", error);
+                });
+            }
+            
+            // تشغيل فيديو الظرف
+            if(envVideo) {
+                envVideo.play().catch(error => {
+                    console.log("خطأ في تشغيل فيديو الظرف:", error);
+                    revealInvitationContent(); 
+                });
+            }
+        }
+
+        // دالة كتم وتشغيل الموسيقى يدوياً من الزر العائم
+        function toggleMusic() {
+            const audioTrack = document.getElementById('weddingAudio');
+            const musicBtn = document.getElementById('musicControlBtn');
+            const icon = musicBtn.querySelector('i');
+
+            if (audioTrack.paused) {
+                audioTrack.play();
+                musicBtn.classList.add('playing');
+                icon.className = "fa-solid fa-music";
+            } else {
+                audioTrack.pause();
+                musicBtn.classList.remove('playing');
+                icon.className = "fa-solid fa-volume-xmark";
+            }
+        }
+
+        // إخفاء شاشة الفيديو والانتقال إلى الصفحة الرئيسية للدعوة
+        function revealInvitationContent() {
+            const videoScreen = document.getElementById('envelopeVideoScreen');
+            videoScreen.classList.add('fade-out');
+            
+            const body = document.getElementById('invitationBody');
+            body.classList.add('show');
+            
+            const internalContainer = document.getElementById('phoneContainer');
+            internalContainer.style.overflowY = 'auto';
+            
+            const mainVideo = document.getElementById('invitationVideo');
+            if(mainVideo) {
+                mainVideo.play().catch(error => console.log("تحذير تشغيل فيديو الخلفية الداخلي:", error));
+            }
+
+            // ضمان ظهور زر الموسيقى إن لم يكن قد ظهر بعد
+            const musicBtn = document.getElementById('musicControlBtn');
+            if(musicBtn) musicBtn.classList.add('show');
+
+            setTimeout(triggerScrollReveal, 100);
+            internalContainer.addEventListener('scroll', triggerScrollReveal);
+        }
+
+        // نظام أنيميشن التمرير (Scroll Reveal)
+        function triggerScrollReveal() {
+            const reveals = document.querySelectorAll('.scroll-reveal');
+            const container = document.getElementById('phoneContainer');
+            const containerHeight = container.clientHeight;
+
+            reveals.forEach(reveal => {
+                const elementTop = reveal.getBoundingClientRect().top - container.getBoundingClientRect().top;
+                if (elementTop < containerHeight - 50) {
+                    reveal.classList.add('active');
+                }
+            });
+        }
+
+        // العداد التنازلي الموجه لتاريخ 20 يونيو 2026
+        const weddingTargetTime = new Date("June 20, 2026 20:30:00").getTime();
+
+        setInterval(function() {
+            const currentTime = new Date().getTime();
+            const timeDiff = weddingTargetTime - currentTime;
+
+            const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
+            document.getElementById("minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+        }, 1000);
+
+        // توليد بتلات الورد المتطايرة ديناميكياً
+        function createGlobalPetals() {
+            const container = document.getElementById('globalPetals');
+            const petalCount = 35; 
+
+            for (let i = 0; i < petalCount; i++) {
+                const petal = document.createElement('div');
+                petal.classList.add('petal');
+                
+                const size = Math.random() * 12 + 8; 
+                petal.style.width = `${size}px`;
+                petal.style.height = `${size}px`;
+                petal.style.left = `${Math.random() * 100}%`;
+                
+                petal.style.animationDuration = `${Math.random() * 6 + 5}s`;
+                petal.style.animationDelay = `${Math.random() * 6}s`;
+                
+                container.appendChild(petal);
+            }
+        }
+    </script>
+</body>
+</html>
